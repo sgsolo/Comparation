@@ -16,6 +16,7 @@
 		D76D0660275E257B004B7508 /* SectionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76D065F275E257B004B7508 /* SectionData.swift */; };
 		D76D0662275E29AE004B7508 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76D0661275E29AE004B7508 /* CollectionViewCell.swift */; };
 		D76D0664275E2AC9004B7508 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76D0663275E2AC9004B7508 /* HeaderView.swift */; };
+		D76D20792760A9B0004B7508 /* CustomCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76D20782760A9B0004B7508 /* CustomCollectionViewLayout.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		D76D065F275E257B004B7508 /* SectionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionData.swift; sourceTree = "<group>"; };
 		D76D0661275E29AE004B7508 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		D76D0663275E2AC9004B7508 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		D76D20782760A9B0004B7508 /* CustomCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewLayout.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 				D76D064B275E0830004B7508 /* AppDelegate.swift */,
 				D76D064D275E0830004B7508 /* SceneDelegate.swift */,
 				D76D064F275E0830004B7508 /* ViewController.swift */,
+				D76D20782760A9B0004B7508 /* CustomCollectionViewLayout.swift */,
 				D76D065F275E257B004B7508 /* SectionData.swift */,
 				D76D0661275E29AE004B7508 /* CollectionViewCell.swift */,
 				D76D0663275E2AC9004B7508 /* HeaderView.swift */,
@@ -153,6 +156,7 @@
 				D76D064C275E0830004B7508 /* AppDelegate.swift in Sources */,
 				D76D064E275E0830004B7508 /* SceneDelegate.swift in Sources */,
 				D76D0660275E257B004B7508 /* SectionData.swift in Sources */,
+				D76D20792760A9B0004B7508 /* CustomCollectionViewLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

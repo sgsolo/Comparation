@@ -7,70 +7,85 @@
 
 import UIKit
 
+var lockedColumn: Int? = 1
+
 class ViewController: UIViewController {
 
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: CustomCollectionViewLayout())
+    let maxHeaderHeight: CGFloat = 100
+    let minHeaderHeight: CGFloat = 30
+    
+    let customCollectionViewLayout = CustomCollectionViewLayout()
+    lazy var collectionView: UICollectionView = { UICollectionView(frame: .zero, collectionViewLayout: customCollectionViewLayout) }()
     let sectionData: [SectionData] = [
         SectionData(
-            headerTitle: "Заголовок 1",
-            cellsData: ["ячейка 1", "ячейка 2", "ячейка 3", "ячейка 3"]
+            headerTitle: "ЗАГОЛОВОК С КАРТИНКАМИ",
+            cellsData: ["столбец 1", "столбец 2", "столбец 3", "столбец 4", "столбец 5", "столбец 6"]
         ),
         SectionData(
             headerTitle: "Заголовок 2",
-            cellsData: ["ячейка 1", "ячейка 2", "ячейка 3", "ячейка 3"]
+            cellsData: ["столбец 1", "столбец 2", "столбец 3", "столбец 4"]
         ),
         SectionData(
             headerTitle: "Заголовок 3",
-            cellsData: ["ячейка 1", "ячейка 2", "ячейка 3", "ячейка 3"]
+            cellsData: ["столбец 1", "столбец 2", "столбец 3", "столбец 4"]
         ),
         SectionData(
             headerTitle: "Заголовок 4",
-            cellsData: ["ячейка 1", "ячейка 2", "ячейка 3", "ячейка 3"]
+            cellsData: ["столбец 1", "столбец 2", "столбец 3", "столбец 4"]
         ),
         SectionData(
             headerTitle: "Заголовок 5",
-            cellsData: ["ячейка 1", "ячейка 2", "ячейка 3", "ячейка 3"]
+            cellsData: ["столбец 1", "столбец 2", "столбец 3", "столбец 4"]
         ),
         SectionData(
             headerTitle: "Заголовок 6",
-            cellsData: ["ячейка 1", "ячейка 2", "ячейка 3", "ячейка 3"]
+            cellsData: ["столбец 1", "столбец 2", "столбец 3", "столбец 4"]
         ),
         SectionData(
             headerTitle: "Заголовок 7",
-            cellsData: ["ячейка 1", "ячейка 2", "ячейка 3", "ячейка 3"]
+            cellsData: ["столбец 1", "столбец 2", "столбец 3", "столбец 4"]
         ),
         SectionData(
             headerTitle: "Заголовок 8",
-            cellsData: ["ячейка 1", "ячейка 2", "ячейка 3", "ячейка 3"]
+            cellsData: ["столбец 1", "столбец 2", "столбец 3", "столбец 4"]
         ),
         SectionData(
             headerTitle: "Заголовок 9",
-            cellsData: ["ячейка 1", "ячейка 2", "ячейка 3", "ячейка 3"]
+            cellsData: ["столбец 1", "столбец 2", "столбец 3", "столбец 4"]
         ),
         SectionData(
             headerTitle: "Заголовок 10",
-            cellsData: ["ячейка 1", "ячейка 2", "ячейка 3", "ячейка 3"]
+            cellsData: ["столбец 1", "столбец 2", "столбец 3", "столбец 4"]
         ),
         SectionData(
             headerTitle: "Заголовок 11",
-            cellsData: ["ячейка 1", "ячейка 2", "ячейка 3", "ячейка 3"]
+            cellsData: ["столбец 1", "столбец 2", "столбец 3", "столбец 4"]
         ),
         SectionData(
             headerTitle: "Заголовок 12",
-            cellsData: ["ячейка 1", "ячейка 2", "ячейка 3", "ячейка 3"]
+            cellsData: ["столбец 1", "столбец 2", "столбец 3", "столбец 4"]
         ),
         SectionData(
             headerTitle: "Заголовок 13",
-            cellsData: ["ячейка 1", "ячейка 2", "ячейка 3", "ячейка 3"]
+            cellsData: ["столбец 1", "столбец 2", "столбец 3", "столбец 4"]
         ),
         SectionData(
             headerTitle: "Заголовок 14",
-            cellsData: ["ячейка 1", "ячейка 2", "ячейка 3", "ячейка 3"]
+            cellsData: ["столбец 1", "столбец 2", "столбец 3", "столбец 4"]
         )
     ]
     
+    var headerTransitionProgress: CGFloat = 0 {
+        didSet {
+            if oldValue != headerTransitionProgress {
+                collectionView.collectionViewLayout.invalidateLayout()
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        customCollectionViewLayout.delegate = self
         view.addSubview(collectionView)
         
         collectionView.isDirectionalLockEnabled = true
@@ -125,7 +140,10 @@ extension ViewController: UICollectionViewDataSource {
         
         let data = sectionData[indexPath.section].cellsData[indexPath.row]
         
-        cell.setData(text: data)
+        cell.setData(text: data, isLockVisible: indexPath.section == 0, isLockEnabled: lockedColumn == indexPath.row) { [weak self] isLocked in
+            lockedColumn = indexPath.row
+            self?.collectionView.reloadData()
+        }
         return cell
     }
     
@@ -146,20 +164,6 @@ extension ViewController: UICollectionViewDataSource {
     }
 }
 
-//extension ViewController: UICollectionViewDelegateFlowLayout {
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-//
-////        let header = HeaderView()
-////        let data = sectionData[section]
-////        header.setData(text: data.headerTitle)
-////        header.setNeedsLayout()
-////        header.layoutIfNeeded()
-//////        header.sizeToFit()
-////        print(header.sizeThatFits(collectionView.bounds.size))
-//        return CGSize(width: collectionView.bounds.width, height: 30)
-//    }
-//}
-
 extension ViewController {
     struct Spec {
         static let cellReuseIdentifier = "cell"
@@ -167,189 +171,36 @@ extension ViewController {
     }
 }
 
-
-class CustomCollectionViewLayout: UICollectionViewLayout {
-    private var cellAttributes = [IndexPath: UICollectionViewLayoutAttributes]()
-    private var cellAttributesWithoutLocking = [IndexPath: UICollectionViewLayoutAttributes]()
-    private var headerAttributes = [IndexPath: UICollectionViewLayoutAttributes]()
-    private var contentSize: CGSize = .zero
-    private var lockedColumn: Int? = 1
-    
-    // MARK: - Constants
-    
-    private let insets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
-    private let cellSpacing = CGFloat(6)
-    
-    // MARK: - UICollectionViewLayout
-    
-    override var collectionViewContentSize: CGSize {
-        return contentSize
-    }
-    
-    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-        return true
-    }
-    
-    override func prepare() {
-        
-        guard let collectionView = collectionView else {
-            contentSize = .zero
-            cellAttributes = [:]
-            headerAttributes = [:]
-            cellAttributesWithoutLocking = [:]
-            return
-        }
-        
-        headerAttributes.removeAll()
-        cellAttributes.removeAll()
-        cellAttributesWithoutLocking.removeAll()
-        
-        var yPosition: CGFloat = 0
-        var maxWidth: CGFloat = 0
-        
-        let numberOfSections = collectionView.numberOfSections
-        
-        for section in 0..<numberOfSections {
-            
-            let headerIndexPath = IndexPath(item: 0, section: section)
-            let supplementaryViewlayoutAttributes = UICollectionViewLayoutAttributes(
-                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                with: headerIndexPath
-            )
-            // TODO: получить размер через делегат
-            supplementaryViewlayoutAttributes.frame = CGRect(
-                x: collectionView.contentOffset.x,
-                y: yPosition,
+extension ViewController: CustomCollectionViewLayoutDelegate {
+    func headerSize(indexPath: IndexPath) -> CGSize {
+        if indexPath.section == 0 {
+            return CGSize(
                 width: collectionView.bounds.width,
-                height: 30
-            )
-            headerAttributes[headerIndexPath] = supplementaryViewlayoutAttributes
-            yPosition = yPosition + supplementaryViewlayoutAttributes.frame.height
-            
-            var maxSectionHeght: CGFloat = 0
-            
-            let numberOfItems = collectionView.numberOfItems(inSection: section)
-            for item in 0 ..< numberOfItems {
-                
-                // TODO: получить размер через делегат
-                let itemWidth = itemWidth()
-                var xPosition = itemWidth * CGFloat(item)
-                let originalXPosition = xPosition
-                var zIndex = 0
-                
-                if lockedColumn == item {
-                    zIndex = 1
-                    print("xPos: \(xPosition + itemWidth)")
-                    print(collectionView.contentOffset.x + collectionView.bounds.width)
-                    if xPosition < collectionView.contentOffset.x {
-                        xPosition = collectionView.contentOffset.x
-                    } else if xPosition + itemWidth > collectionView.contentOffset.x + collectionView.bounds.width {
-                        xPosition = collectionView.contentOffset.x + collectionView.bounds.width - itemWidth
-                    }
-                }
-                
-                let origin = CGPoint(
-                    x: xPosition,
-                    y: yPosition
-                )
-                
-                // TODO: получить размер через делегат
-                let itemSize = CGSize(
-                    width: itemWidth,
-                    height: 50
-                )
-                
-                let indexPath = IndexPath(item: item, section: section)
-                let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
-                attributes.frame = CGRect(
-                    origin: origin,
-                    size: itemSize
-                )
-                attributes.zIndex = zIndex
-                
-                maxSectionHeght = max(maxSectionHeght, attributes.frame.height)
-                maxWidth = max(maxWidth, attributes.frame.maxX)
-                
-                cellAttributes[indexPath] = attributes
-                if let attributesCopy = attributes.copy() as? UICollectionViewLayoutAttributes {
-                    attributesCopy.frame.origin.x = originalXPosition
-                    cellAttributesWithoutLocking[indexPath] = attributesCopy
-                }
-            }
-            yPosition = yPosition + maxSectionHeght
-        }
-        
-        contentSize = CGSize(
-            width: maxWidth,
-            height: yPosition
-        )
-    }
-    
-    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        return headerAttributes.filter { $1.frame.intersects(rect) }.map { $1 } +
-        cellAttributes.filter { $1.frame.intersects(rect) }.map { $1 }
-    }
-    
-    override func layoutAttributesForSupplementaryView(
-        ofKind elementKind: String,
-        at indexPath: IndexPath
-    ) -> UICollectionViewLayoutAttributes? {
-        return headerAttributes[indexPath]
-    }
-    
-    override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        return cellAttributes[indexPath]
-    }
-    
-    override func targetContentOffset(
-        forProposedContentOffset proposedContentOffset: CGPoint,
-        withScrollingVelocity velocity: CGPoint)
-        -> CGPoint
-    {
-        print(proposedContentOffset)
-        
-        guard let collectionView = collectionView else {
-            return super.targetContentOffset(
-                forProposedContentOffset: proposedContentOffset,
-                withScrollingVelocity: velocity
-            )
-        }
-        
-        let visibleRect = CGRect(
-            x: proposedContentOffset.x,
-            y: proposedContentOffset.y,
-            width: collectionView.bounds.width,
-            height: collectionView.bounds.height
-        )
-        
-        // ищем самую левую ячейку из коллекции
-        var attributes = cellAttributesWithoutLocking.filter { $1.frame.intersects(visibleRect) }.map { $1 }
-        attributes.sort { $0.frame.origin.x < $1.frame.origin.x }
-        
-        guard let layoutAttributes = attributes.first else {
-            return super.targetContentOffset(
-                forProposedContentOffset: proposedContentOffset,
-                withScrollingVelocity: velocity
-            )
-        }
-        let diff = abs(layoutAttributes.frame.origin.x - proposedContentOffset.x)
-        if diff > (itemWidth() / 2) {
-            return CGPoint(
-                x: layoutAttributes.frame.maxX,
-                y: proposedContentOffset.y
+                height: max(minHeaderHeight, ((maxHeaderHeight) * (1 - headerTransitionProgress)))
             )
         } else {
-            return CGPoint(
-                x: layoutAttributes.frame.origin.x,
-                y: proposedContentOffset.y
+            return CGSize(
+                width: collectionView.bounds.width,
+                height: minHeaderHeight
             )
         }
     }
+}
+
+extension ViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        changeHeaderTransitionProgress(offset: scrollView.contentOffset.y)
+    }
     
-    private func itemWidth() -> CGFloat {
-        guard let collectionView = collectionView else {
-            return 0
+    func changeHeaderTransitionProgress(offset: CGFloat) {
+        var progress: CGFloat = 0
+        if offset < 0 {
+            progress = 0
+        } else if offset > maxHeaderHeight {
+            progress = 1
+        } else {
+            progress = (offset) / (maxHeaderHeight)
         }
-        return collectionView.frame.width / 2
+        headerTransitionProgress = progress
     }
 }
